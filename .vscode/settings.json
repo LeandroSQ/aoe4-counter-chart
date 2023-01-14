@@ -1,0 +1,7 @@
+{
+	"workbench.colorTheme": "One Monokai",
+	// Set file associations .ejs to .html
+    "files.associations": {
+        "*.ejs": "html"
+    },
+}

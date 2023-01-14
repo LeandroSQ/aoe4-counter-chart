@@ -1,0 +1,10 @@
+node_modules
+package-lock.json
+yarn.lock
+unuseful
+-output.txt
+.DS_Store
+dist
+yarn-error.log
+data/cache
+coverage

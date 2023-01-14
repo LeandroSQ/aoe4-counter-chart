@@ -1,0 +1,20 @@
+{
+	"name": "aoe4-counter-chart",
+	"version": "1.0.0",
+	"description": "Interactive chart for counter units from the game Age of Empires IV",
+	"main": "src/main.js",
+	"author": "LeandroSQ <leandrosoaresquevedo@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"build": "node src/main.js",
+		"dev": "nodemon src/main.js --watch public --watch src",
+		"start": "npx http-server public -p 3000"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.12"
+	},
+	"dependencies": {
+		"ejs": "^3.1.8",
+		"jimp": "^0.16.2"
+	}
+}
