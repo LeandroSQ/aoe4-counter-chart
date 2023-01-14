@@ -147,7 +147,7 @@ async function getUnitIconPath(unitId) {
 	for (const suffix of suffixes) {
 		const filename = unitIconPath + suffix
 		if (await checkFileExistence(filename + ".png")) {
-			return `data/images/units/${unitId}${suffix}.png`;
+			return `${unitId}${suffix}.png`;
 		}
 	}
 
@@ -183,10 +183,12 @@ async function parseGameMetadata() {
 	// Filter the units
 	const units = unitIds.map(id => data.find(unit => unit.id == id));
 	const map = await Promise.all(units.map(async unit => {
+		const imageName = await getUnitIconPath(unit.id);
 		return {
 			id: unit.id,
 			name: unit.name,
-			image: await getUnitIconPath(unit.id),
+			imageName,
+			image: `images/${imageName}`
 		};
 	}));
 
@@ -236,6 +238,29 @@ async function parseTemplate(table, units) {
 	await fs.writeFile(outputPath, html, "utf8");
 }
 
+async function copyImages(units) {
+	// Define the paths
+	const dataPath = path.join(__dirname, "../", "data", "images", "units");
+	const distPath = path.join(__dirname, "../", "dist", "images");
+
+	// List the files in the public folder
+	let files = units.map(unit => path.join(dataPath, unit.imageName));
+
+	// Create the dist folder
+	await fs.mkdir(distPath, { recursive: true });
+
+	// Copies everything from the public folder to the dist folder
+	await Promise.all(
+		files.map(async (file) => {
+			const sourcePath = file;
+			const destinationPath = path.join(distPath, path.basename(file));
+
+			// Copy the file
+			await fs.copyFile(sourcePath, destinationPath)
+		})
+	);
+}
+
 async function main() {
 	// Parse the image grid
 	const table = await parseImageGrid();
@@ -250,6 +275,9 @@ async function main() {
 
 	// Read and process the ejs template
 	await parseTemplate(table, data);
+
+	// Copy the images
+	await copyImages(data);
 }
 
 main();

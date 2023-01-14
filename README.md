@@ -2,7 +2,17 @@
 
 This is an interactive table of the counters for units within the game.
 
-You can [check it live](https://leandrosq.github.io/aoe4-counter-chart/).
+<br/>
+<br/>
+<p align="center">
+    <img src=".github/images/screenshot01.png">
+</p>
+
+<p align="center">
+ <a href="https://leandrosq.github.io/aoe4-counter-chart/">
+   Live demo here
+ </a>
+</p>
 
 ## Project
 

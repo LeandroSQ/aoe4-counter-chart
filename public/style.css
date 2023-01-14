@@ -16,12 +16,18 @@ html, body {
 
     text-shadow: 0px 0px 1px #000000;
 
-    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 img {
-    /* max-width: 32px; */
-    max-height: 28pt;
+    max-height: min(28pt, 3.35vh);
 }
 
 table {
@@ -34,8 +40,8 @@ table {
 .unit {
     cursor: pointer;
 
-    padding: 2.5pt;
-    margin: 2.5pt;
+    padding: 1.5pt;
+    margin: 1.5pt;
     border-radius: 5pt;
 
     background-color: rgba(255, 255, 255, 0.025);
@@ -49,18 +55,29 @@ table {
     text-overflow: ellipsis;
 }
 
+.unit img {
+    transition: transform 150ms ease-out;
+}
+
+.unit.active img {
+    transform: scale(1.2);
+}
+
 .col {
     width: 65px;
 }
 
 table.hover td {
     opacity: 0.85;
-    filter: grayscale(40%);
+    will-change: filter;
+    transform: translateZ(0);
+    filter: saturate(0);
 }
 
 table.hover td.active {
     opacity: 1;
-    filter: grayscale(0) saturate(120%);
+    transform: translateZ(0);
+    filter: saturate(1.2);
 }
 
 .row, tr td {
@@ -72,8 +89,8 @@ table.hover td.active {
     cursor: pointer;
 
     position: relative;
-    max-width: 30pt;
-    max-height: 30pt;
+    max-width: calc(100vw / 18);
+    max-height: calc(100vh / 18);
 
     border-radius: 7.5pt;
     border: 2pt solid rgba(0, 0, 0, 0.25);
