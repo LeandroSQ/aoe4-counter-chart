@@ -196,69 +196,86 @@ async function parseGameMetadata() {
 }
 
 async function copyPublicFolder() {
-	// Define the paths
-	const publicPath = path.join(__dirname, "../", "public");
-	const distPath = path.join(__dirname, "../", "dist");
+	try {
+		// Define the paths
+		const publicPath = path.join(__dirname, "../", "public");
+		const distPath = path.join(__dirname, "../", "dist");
 
-	// Clear the dist folder
-	await fs.rmdir(distPath, { recursive: true });
-	await fs.mkdir(distPath);
+		// Clear the dist folder
+		if (await checkFileExistence(distPath)) {
+			await fs.rmdir(distPath, { recursive: true });
+		}
+		await fs.mkdir(distPath);
 
-	// List the files in the public folder
-	let files = await fs.readdir(publicPath);
-	// Remove the template file
-	files = files.filter(file => file != "index.ejs");
+		// List the files in the public folder
+		let files = await fs.readdir(publicPath);
+		// Remove the template file
+		files = files.filter(file => file != "index.ejs");
 
-	// Copies everything from the public folder to the dist folder
-	await Promise.all(
-		files.map(async (file) => {
-			const sourcePath = path.join(publicPath, file);
-			const destinationPath = path.join(distPath, file);
+		// Copies everything from the public folder to the dist folder
+		await Promise.all(
+			files.map(async (file) => {
+				const sourcePath = path.join(publicPath, file);
+				const destinationPath = path.join(distPath, file);
 
-			// Copy the file
-			await fs.copyFile(sourcePath, destinationPath);
-		})
-	);
+				// Copy the file
+				await fs.copyFile(sourcePath, destinationPath);
+			})
+		);
+	} catch (error) {
+		console.error("Error while copying the public folder:");
+		console.error(error);
+	}
 }
 
 async function parseTemplate(table, units) {
-	// Define the paths
-	const publicPath = path.join(__dirname, "../", "public");
-	const distPath = path.join(__dirname, "../", "dist");
+	try {
+		// Define the paths
+		const publicPath = path.join(__dirname, "../", "public");
+		const distPath = path.join(__dirname, "../", "dist");
 
-	// Read the template file
-	const templatePath = path.join(publicPath, "index.ejs");
-	const template = await fs.readFile(templatePath, "utf8");
+		// Read the template file
+		const templatePath = path.join(publicPath, "index.ejs");
+		const template = await fs.readFile(templatePath, "utf8");
 
-	// Render it
-	const html = ejs.render(template, { table, units });
+		// Render it
+		const html = ejs.render(template, { table, units });
 
-	// Save it
-	const outputPath = path.join(distPath, "index.html");
-	await fs.writeFile(outputPath, html, "utf8");
+		// Save it
+		const outputPath = path.join(distPath, "index.html");
+		await fs.writeFile(outputPath, html, "utf8");
+	} catch (error) {
+		console.error("Error while parsing the template:");
+		console.error(error);
+	}
 }
 
 async function copyImages(units) {
-	// Define the paths
-	const dataPath = path.join(__dirname, "../", "data", "images", "units");
-	const distPath = path.join(__dirname, "../", "dist", "images");
+	try {
+		// Define the paths
+		const dataPath = path.join(__dirname, "../", "data", "images", "units");
+		const distPath = path.join(__dirname, "../", "dist", "images");
 
-	// List the files in the public folder
-	let files = units.map(unit => path.join(dataPath, unit.imageName));
+		// List the files in the public folder
+		let files = units.map(unit => path.join(dataPath, unit.imageName));
 
-	// Create the dist folder
-	await fs.mkdir(distPath, { recursive: true });
+		// Create the dist folder
+		await fs.mkdir(distPath, { recursive: true });
 
-	// Copies everything from the public folder to the dist folder
-	await Promise.all(
-		files.map(async (file) => {
-			const sourcePath = file;
-			const destinationPath = path.join(distPath, path.basename(file));
+		// Copies everything from the public folder to the dist folder
+		await Promise.all(
+			files.map(async (file) => {
+				const sourcePath = file;
+				const destinationPath = path.join(distPath, path.basename(file));
 
-			// Copy the file
-			await fs.copyFile(sourcePath, destinationPath)
-		})
-	);
+				// Copy the file
+				await fs.copyFile(sourcePath, destinationPath)
+			})
+		);
+	} catch (error) {
+		console.error("Error while copying the images:");
+		console.error(error);
+	}
 }
 
 async function main() {
